@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %} map cabling {% endblock%}
+
+{% block main %}
+<div id="divNodeIdentification">
+  <input type="text" id="nodeIdentification" />
+</div>
+
+<div id="mynetwork"></div>
+<script>mapCablingJscript()</script>
+{% endblock %}

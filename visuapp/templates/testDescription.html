@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %} map Layer 2 Delta {% endblock%}
+
+{% block main %}
+<div id="divNodeIdentification">
+  <input type="text" id="nodeIdentification" />
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="tab-content" id="faq-tab-content">
+        <div class="tab-pane show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+          <div class="accordion" id="accordion-tab-1">
+            <div class="card">
+              <div class="card-header" id="accordion-tab-1-heading-1">
+                <h5>
+                  <button class="btn btn-link" type="button" data-toggle="collapse"
+                    data-target="#accordion-tab-1-content-1" aria-expanded="false"
+                    aria-controls="accordion-tab-1-content-1">Map Layer 2</button>
+                </h5>
+              </div>
+              <div class="collapse show" id="accordion-tab-1-content-1" aria-labelledby="accordion-tab-1-heading-1"
+                data-parent="#accordion-tab-1">
+                <div class="card-body">
+                  <p>Cette carte est faite depuis le fichier referenceCablingMap.json. Aucun traitement n'est fait.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="accordion-tab-1-heading-2">
+                <h5>
+                  <button class="btn btn-link" type="button" data-toggle="collapse"
+                    data-target="#accordion-tab-1-content-2" aria-expanded="false"
+                    aria-controls="accordion-tab-1-content-2">Map Delta LLDP</button>
+                </h5>
+              </div>
+              <div class="collapse" id="accordion-tab-1-content-2" aria-labelledby="accordion-tab-1-heading-2"
+                data-parent="#accordion-tab-1">
+                <div class="card-body">
+                  <p>Cette carte est faite depuis le fichier referenceCablingMap.json. Pour chaque element defini dans le fichier
+                    une commande show lldp neighbors lui est envoye.</p>
+                    <p>Le resultat est construit de la maniere suivante :</p>
+                    <p>La description de l element du fichier doit corespondre aux informations du show lldp neighbors.</p>
+                    <p>Attention : Actuellement si le show lldp incorpore des elements non present dans le fichier de reference, ces derniers ne
+                      sont pas affiches.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="accordion-tab-1-heading-3">
+                <h5>
+                  <button class="btn btn-link" type="button" data-toggle="collapse"
+                    data-target="#accordion-tab-1-content-3" aria-expanded="false"
+                    aria-controls="accordion-tab-1-content-3">Map Interfaces Status</button>
+                </h5>
+              </div>
+              <div class="collapse" id="accordion-tab-1-content-3" aria-labelledby="accordion-tab-1-heading-3"
+                data-parent="#accordion-tab-1">
+                <div class="card-body">
+                  <p>Cette carte est faite depuis le fichier referenceCablingMap.json. Pour chaque element defini dans le fichier
+                    une commande show lldp neighbors lui est envoye.</p>
+                  <p>Le resultat est construit de la maniere suivante :</p>
+                  <p>Pour chaque element du fichier une commande show interfaces status est envoye.</p>
+                  <p>Le resultat affiche est en fonction des ports configures dans le fichier de reference.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="accordion-tab-1-heading-4">
+                <h5>
+                  <button class="btn btn-link" type="button" data-toggle="collapse"
+                    data-target="#accordion-tab-1-content-4" aria-expanded="false"
+                    aria-controls="accordion-tab-1-content-4">Map BGP</button>
+                </h5>
+              </div>
+              <div class="collapse" id="accordion-tab-1-content-4" aria-labelledby="accordion-tab-1-heading-4"
+                data-parent="#accordion-tab-1">
+                <div class="card-body">
+                  <p>Cette carte est faite depuis le fichier referenceCablingMap.json. Pour chaque element defini dans le fichier
+                    une commande show bgp summary lui est envoye.</p>
+                  <p>Le resultat est construit de la maniere suivante :</p>
+                  <p>Le resultat est affiche en fonction des liens physiques. L adresse IP du neighbor est prise en compte afin de definir sur quel port physique
+                    est configure la session BGP.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" id="accordion-tab-1-heading-5">
+                <h5>
+                  <button class="btn btn-link" type="button" data-toggle="collapse"
+                    data-target="#accordion-tab-1-content-5" aria-expanded="false"
+                    aria-controls="accordion-tab-1-content-5">Map EVPN</button>
+                </h5>
+              </div>
+              <div class="collapse" id="accordion-tab-1-content-5" aria-labelledby="accordion-tab-1-heading-5"
+                data-parent="#accordion-tab-1">
+                <div class="card-body">
+                  <p>Cette carte est faite depuis le fichier referenceCablingMap.json. Pour chaque element defini dans le fichier
+                    une commande show bgp evpn summary lui est envoye.</p>
+                  <p>Le resultat est construit de la maniere suivante :</p>
+                  <p>Le resultat est affiche en fonction des liens physiques. L adresse IP de la loopback0 du neighbor est prise en compte afin de definir sur quel spine
+                    est configure la session evpn.</p>
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

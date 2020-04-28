@@ -1,0 +1,35 @@
+{% extends "basePdf.html" %}
+
+{% block title %} Result BGP Status {% endblock%}
+
+{% block main %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">status</th>
+        <th scope="col">device</th>
+        <th scope="col">local port</th>
+        <th scope="col">local IP</th>
+        <th scope="col">remote IP</th>
+        <th scope="col">peer state</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      {% for item in data['items'] %}
+      <tr>
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.status}}</td>
+        <td>{{item.localDevice}}</td>
+        <td>{{item.localPort}}</td>
+        <td>{{item.localIp}}</td>
+        <td>{{item.remoteIp}}</td>
+        <td>{{item.peerState}}</td>
+      </tr>
+      {% endfor %}
+      </tr>
+
+    </tbody>
+  </table>
+{% endblock %}

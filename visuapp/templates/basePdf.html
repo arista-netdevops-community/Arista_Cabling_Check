@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <title>result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pdf.css', _external=True) }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/bootstrap.min.css', _external=True) }}">
+  </head>
+  <body>
+    <main>
+      <div class="container">
+        <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th colspan="4"><h1>{{title.title}}</h1></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="infoTest" colspan="2">Date:</th>
+                <td class="infoTest" colspan="2">Author: {{ config['AUTHOR']}}</td>
+              </tr>
+              <tr>
+                <th class="infoTest" colspan="2">Site: {{ config['SITE']}}</th>
+                <td class="infoTest" colspan="2">Test Result: <b>{{data['testResult']}}</b></td>
+              </tr>
+            </tbody>
+        </table>
+      <div id="main">
+        {% block main %}{% endblock %}
+      </div>
+    </main>
+  </body>
+
+</html>

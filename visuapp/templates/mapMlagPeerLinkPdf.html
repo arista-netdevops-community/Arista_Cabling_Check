@@ -1,0 +1,35 @@
+{% extends "basePdf.html" %}
+
+{% block title %} Result MLAG PeerLink Status {% endblock%}
+
+{% block main %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">status</th>
+        <th scope="col">device</th>
+        <th scope="col">port channel</th>
+        <th scope="col">nbre of port</th>
+        <!-- <th scope="col">State nbre of port</th> -->
+        <th scope="col">Port</th>
+        <th scope="col">synchronization</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      {% for item in data['items'] %}
+      <tr>
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.status}}</td>
+        <td>{{item.localDevice}}</td>
+        <td>{{item.portChannel}}</td>
+        <td>{{item.nbrePort}}</td>
+        <!-- <td>{{item.stateNbrePort}}</td> -->
+        <td>{{item.ethernetPort}}</td>
+        <td>{{item.synchronization}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

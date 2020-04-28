@@ -1,0 +1,29 @@
+{% extends "basePdf.html" %}
+
+{% block title %} Result Interfaces Status {% endblock%}
+
+{% block main %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">status</th>
+        <th scope="col">device</th>
+        <th scope="col">local port</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      {% for item in data['items'] %}
+      <tr>
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.status}}</td>
+        <td>{{item.localDevice}}</td>
+        <td>{{item.localPort}}</td>
+      </tr>
+      {% endfor %}
+      </tr>
+
+    </tbody>
+  </table>
+{% endblock %}

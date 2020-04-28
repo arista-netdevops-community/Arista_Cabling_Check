@@ -1,0 +1,42 @@
+{% extends "basePdf.html" %}
+
+{% block title %} Result LLDP Delta {% endblock%}
+
+{% block main %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col"colspan="2" class="cellFusion">Global</th>
+        <th scope="col"colspan="4" class="cellFusion">From Cabling</th>
+        <th scope="col"colspan="2" class="cellFusion">From LLDP</th>
+      </tr>
+      <tr>
+        <td scope="col">#</td>
+        <td scope="col">status</td>
+        <td scope="col">device</td>
+        <td scope="col">local port</td>
+        <td scope="col">remote device</td>
+        <td scope="col">remote port</td>
+        <td scope="col">remote device</td>
+        <td scope="col">remote port</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      {% for item in data['items'] %}
+      <tr>
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.status}}</td>
+        <td>{{item.localDevice}}</td>
+        <td>{{item.localPort}}</td>
+        <td>{{item.remoteDevice}}</td>
+        <td>{{item.remotePort}}</td>
+        <td>{{item.lldpRemoteDevice}}</td>
+        <td>{{item.lldpRemotePort}}</td>
+      </tr>
+      {% endfor %}
+      </tr>
+
+    </tbody>
+  </table>
+{% endblock %}

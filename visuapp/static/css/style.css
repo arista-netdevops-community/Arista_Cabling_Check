@@ -1,0 +1,216 @@
+body {
+    color: #404E67;
+    background: rgb(245, 250, 248);
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+}
+.table-wrapper {
+    width: 100%;
+    margin: 30px auto;
+    background: #fff;
+    padding: 20px;	
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+.table-title {
+    padding-bottom: 10px;
+    margin: 0 0 10px;
+}
+.table-title h2 {
+    margin: 6px 0 0;
+    font-size: 22px;
+}
+.table-title .add-new {
+    float: right;
+    height: 30px;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    border-radius: 50px;
+    line-height: 13px;
+}
+.table-title .add-new i {
+    margin-right: 4px;
+}
+table.table {
+    table-layout: fixed;
+}
+table.table tr th, table.table tr td {
+    border-color: #e9e9e9;
+}
+table.table th i {
+    font-size: 13px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+table.table th:last-child {
+    width: 100px;
+}
+table.table td a {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 5px;
+    min-width: 24px;
+}    
+table.table td a.add {
+    color: #27C46B;
+}
+table.table td a.edit {
+    color: #FFC107;
+}
+table.table td a.delete {
+    color: #E34724;
+}
+table.table td i {
+    font-size: 19px;
+}
+table.table td a.add i {
+    font-size: 24px;
+    margin-right: -1px;
+    position: relative;
+    top: 3px;
+}    
+table.table .form-control {
+    height: 32px;
+    line-height: 32px;
+    box-shadow: none;
+    border-radius: 2px;
+}
+table.table .form-control.error {
+    border-color: #f50000;
+}
+table.table td .add {
+    display: none;
+}
+
+#mynetwork {
+    /* width: 600px; */
+    width: 100%;
+    /* height: 400px; */
+    height: 95%;
+    border: 1px solid lightgray;
+}
+#main {
+    height: 800px;
+}
+
+#divNodeIdentification {
+    width: 100%;
+    margin: 0 auto;
+    background: #0412cf;
+}
+
+#nodeIdentification {
+    width:15%;
+    display: block;
+    margin : 0 auto;
+    font-size:12px;
+}
+
+/* FAQ start style */
+// FAQ
+.faq-nav {
+    flex-direction: column;
+    margin: 0 0 32px;
+    border-radius: 2px;    
+    border: 1px solid #ddd;
+    box-shadow: 0 1px 5px rgba(85, 85, 85, 0.15);
+    
+    .nav-link {
+        position: relative;
+        display: block;
+        margin: 0;
+        padding: 13px 16px;
+        background-color: #fff;
+        border: 0;
+        border-bottom: 1px solid #ddd;
+        border-radius: 0;
+        color: #616161;
+        transition: background-color .2s ease;
+        
+        &:hover {
+            background-color: #f6f6f6;
+        }
+        
+        &.active {
+            background-color: #f6f6f6;
+            font-weight: 700;
+            color: rgba(0,0,0,.87);        
+        }
+        
+        &:last-of-type {
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+            border-bottom: 0;
+        }
+        
+        i.mdi {
+            margin-right: 5px;
+            font-size: 18px;
+            position: relative;
+        }
+    }
+}
+
+// TAB CONTENT
+.tab-content {
+    box-shadow: 0 1px 5px rgba(85, 85, 85, 0.15);
+    
+    .card {
+        border-radius: 0;
+    }
+    
+    .card-header {
+        padding: 15px 16px;
+        border-radius: 0;
+        background-color: #f6f6f6;
+        
+        h5 {
+            margin: 0;
+            
+            button {
+                display: block;
+                width: 100%;
+                padding: 0;
+                border: 0;
+                font-weight: 700;
+                color: rgba(0,0,0,.87);
+                text-align: left;
+                white-space: normal;
+                
+                &:hover,
+                &:focus,
+                &:active,
+                &:hover:active {
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+    
+    .card-body {
+        p {
+            color: #616161;
+            
+            &:last-of-type {
+                margin: 0;
+            }
+        }
+    }
+}
+
+
+// BORDER FIX
+.accordion {
+    > .card {
+        &:not(:first-child) {
+            border-top: 0;
+        }   
+    }
+}
+
+.collapse.show {
+    .card-body {
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+}

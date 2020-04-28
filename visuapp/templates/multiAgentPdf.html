@@ -1,0 +1,33 @@
+{% extends "basePdf.html" %}
+
+{% block title %} Result Multi Agent {% endblock%}
+
+{% block main %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">status</th>
+        <th scope="col">device</th>
+        <th scope="col">configure</th>
+        <th scope="col">operating</th>
+        <th scope="col">action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      {% for item in data['items'] %}
+      <tr>
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.status}}</td>
+        <td>{{item.localDevice}}</td>
+        <td>{{item.configure}}</td>
+        <td>{{item.operating}}</td>
+        <td>{{item.action}}</td>        
+      </tr>
+      {% endfor %}
+      </tr>
+
+    </tbody>
+  </table>
+{% endblock %}

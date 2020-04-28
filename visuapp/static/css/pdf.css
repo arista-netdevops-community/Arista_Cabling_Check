@@ -1,0 +1,15 @@
+body{
+  background-color: #74992e;
+}
+h1{
+  color: blue;
+  text-align: center;
+}
+
+.infoTest{
+  text-align: left;
+  font-weight: normal;
+}
+.cellFusion{
+  text-align: center;
+}

@@ -1,0 +1,34 @@
+{% extends "basePdf.html" %}
+
+{% block title %} Result EVPN Status {% endblock%}
+
+{% block main %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">state</th>
+        <th scope="col">device</th>
+        <th scope="col">remote device</th>
+        <th scope="col">peer state</th>
+        <th scope="col">evpn peer</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      {% for item in data['items'] %}
+      <tr>
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.status}}</td>
+        <td>{{item.localDevice}}</td>
+        <td>{{item.remoteDevice}}</td>
+        <td>{{item.peerState}}</td>        
+        <td>{{item.evpnPeer}}</td>
+      </tr>
+      {% endfor %}
+      </tr>
+
+    </tbody>
+  </table>
+{% endblock %}
