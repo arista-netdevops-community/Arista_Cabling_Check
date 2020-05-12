@@ -3,19 +3,20 @@ This software allows checking some parameters and create some MAPs.
 
 ## Installation
 Step 1 :
-pip install -r requirement.txt
+```pip install -r requirement.txt```
 
 You have to install manually wkhtmltopdf.
 
 ## How to configure
-Goto /visuapp/static/data and edit referenceCablingMap.json
-The network representation is based on level (from 1 to nn)
+Edit the file [referenceCablingMap.json](visuapp/static/data/referenceCablingMap.json)  
+The network representation is based on level (from 1 to nn)  
 In general:
-level1 is for the Spine.
-level2 is for the Leaf.
-level3 is for the distribution Leaf.
+- level1 is for the Spine.
+- level2 is for the Leaf.
+- level3 is for the distribution Leaf.
 
 Example :
+```
 {
   "level1": {
     "spine1": {
@@ -49,3 +50,5 @@ Example :
       "18":["leaf5-A","1"]
     }
   }
+}
+```
