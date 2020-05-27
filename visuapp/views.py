@@ -43,8 +43,20 @@ def powerSupplyPdf():
   response.headers['Content-Disposition'] = 'inline; filename=powerSupplyPdf.pdf; options=options'
   return response
 
-# **************************************************************************************************
 
+@app.route('/fanTestPdf')
+def fanTestPdf():
+  dwarfFunction.coolingPdf()
+  with open('visuapp/static/data/result/fanTest.json') as jsondata:
+    data = json.load(jsondata)
+  title = {'title': 'Fan Status'}
+  rendered = render_template('fanTestPdf.html',data=data, title=title)
+  pdf= pdfkit.from_string(rendered,False)
+  response = make_response(pdf)
+  response.headers['Content-type'] = 'application/pdf'
+  response.headers['Content-Disposition'] = 'inline; filename=fanTestPdf.pdf; options=options'
+  return response
+# **************************************************************************************************
 
 # MAP CABLING ********************************************************
 @app.route('/mapCabling')

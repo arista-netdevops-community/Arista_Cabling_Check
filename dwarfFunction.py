@@ -28,7 +28,8 @@ commandes=['show lldp neighbors detail',
             'show lacp neighbor all-ports',
             'show bgp evpn route-type imet',
             'show ip route summary',
-            'show environment power']
+            'show system environment cooling',
+            'show system environment power']
 
 def deviceInventory():
   deviceArray=[]
@@ -678,14 +679,14 @@ def powerSupplyPdf():
     if deviceData == None:
       deviceData={}
     # Test if showiproutesummary section exist -
-    if 'showenvironmentpower' in deviceData.keys():
+    if 'showsystemenvironmentpower' in deviceData.keys():
       # store the result
-      for key in deviceData['showenvironmentpower']['powerSupplies'].keys():
+      for key in deviceData['showsystemenvironmentpower']['powerSupplies'].keys():
         powerId = key
-        state = deviceData['showenvironmentpower']['powerSupplies'][key]['state']
+        state = deviceData['showsystemenvironmentpower']['powerSupplies'][key]['state']
         if state != "ok":
           testResult +=1
-        modelName = deviceData['showenvironmentpower']['powerSupplies'][key]['modelName']
+        modelName = deviceData['showsystemenvironmentpower']['powerSupplies'][key]['modelName']
         testStatus = "Pass"
         # Call the pdf report function
         dataArray = dict(localDevice=device,powerId=key,
@@ -707,9 +708,53 @@ def powerSupplyPdf():
   resultPdf ={"items":items,"testResult":testStatus}
   # Store the result in the file
   writeData('result/powerSupply',resultPdf)
-  
 
+def coolingPdf():
+  testResult = 0
+  items=[]
+  # Inventory device
+  devices = deviceInventory()
+  for device in devices:
+    localTestResult = 0
+    # Load the json file associated to the the device
+    deviceData = readDataJsonFile('devices/'+device)
+    if deviceData == None:
+      deviceData={}
+    # Test if showsystemenvironmentcooling section exist -
+    if 'showsystemenvironmentcooling' in deviceData.keys():
+      # store the result
+      for item in deviceData['showsystemenvironmentcooling']['powerSupplySlots']:
+        label = item['label']
+        status = item['status']
+        if status != "ok":
+          testResult +=1
+        dataArray = dict(localDevice=device,label=label,
+                          status=status)
+        items = generateReportPdf("fanTest",dataArray,items)
 
+      for item in deviceData['showsystemenvironmentcooling']['fanTraySlots']:
+        label = item['label']
+        status = item['status']
+        if status != "ok":
+          testResult +=1
+        dataArray = dict(localDevice=device,label=label,
+                          status=status)
+        items = generateReportPdf("fanTest",dataArray,items)
+    else:
+      definedAnswer = "NA"
+      # Call the pdf report function
+      dataArray = dict(localDevice=device,label=definedAnswer,
+                        status=definedAnswer)
+      items = generateReportPdf("fanTest",dataArray,items)
+
+  # Generate the file for the pdf report 
+  if testResult > 0:
+    testStatus = "NOT PASS"
+  else:
+    testStatus = "PASS"
+  resultPdf ={"items":items,"testResult":testStatus}
+  # Store the result in the file
+  writeData('result/fanTest',resultPdf)
 
 
 
@@ -741,4 +786,3 @@ def generateReportPdf(reportName,dataArray,items):
 
 
 # main()
-powerSupplyPdf()

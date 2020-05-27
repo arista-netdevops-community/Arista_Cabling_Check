@@ -1,0 +1,29 @@
+{% extends "basePdf.html" %}
+
+{% block title %} Result Fan status {% endblock%}
+
+{% block main %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">device</th>
+        <th scope="col">identification</th>
+        <th scope="col">state</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      {% for item in data['items'] %}
+      <tr>
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.localDevice}}</td>
+        <td>{{item.label}}</td>
+        <td>{{item.status}}</td>
+      </tr>
+      {% endfor %}
+      </tr>
+
+    </tbody>
+  </table>
+{% endblock %}
