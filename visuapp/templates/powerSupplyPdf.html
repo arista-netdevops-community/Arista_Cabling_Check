@@ -1,0 +1,31 @@
+{% extends "basePdf.html" %}
+
+{% block title %} Result MLAG Status {% endblock%}
+
+{% block main %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">device</th>
+        <th scope="col">Power Id</th>
+        <th scope="col">model Name</th>
+        <th scope="col">state</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      {% for item in data['items'] %}
+      <tr>
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.localDevice}}</td>
+        <td>{{item.powerId}}</td>
+        <td>{{item.modelName}}</td>
+        <td>{{item.state}}</td>
+      </tr>
+      {% endfor %}
+      </tr>
+
+    </tbody>
+  </table>
+{% endblock %}

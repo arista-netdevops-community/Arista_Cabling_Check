@@ -27,7 +27,8 @@ commandes=['show lldp neighbors detail',
             'show mlag interfaces detail',
             'show lacp neighbor all-ports',
             'show bgp evpn route-type imet',
-            'show ip route summary']
+            'show ip route summary',
+            'show environment power']
 
 def deviceInventory():
   deviceArray=[]
@@ -664,6 +665,52 @@ def multiAgentPdf():
   # Store the result in the file
   writeData('result/multiAgentReport',resultPdf)
 
+# Power Supply
+def powerSupplyPdf():
+  testResult = 0
+  items=[]
+  # Inventory device
+  devices = deviceInventory()
+  for device in devices:
+    localTestResult = 0
+    # Load the json file associated to the the device
+    deviceData = readDataJsonFile('devices/'+device)
+    if deviceData == None:
+      deviceData={}
+    # Test if showiproutesummary section exist -
+    if 'showenvironmentpower' in deviceData.keys():
+      # store the result
+      for key in deviceData['showenvironmentpower']['powerSupplies'].keys():
+        powerId = key
+        state = deviceData['showenvironmentpower']['powerSupplies'][key]['state']
+        if state != "ok":
+          testResult +=1
+        modelName = deviceData['showenvironmentpower']['powerSupplies'][key]['modelName']
+        testStatus = "Pass"
+        # Call the pdf report function
+        dataArray = dict(localDevice=device,powerId=key,
+                          state=state, modelName=modelName)
+        items = generateReportPdf("powerSupply",dataArray,items)
+    else:
+      definedAnswer = "NA"
+      # Call the pdf report function
+      dataArray = dict(localDevice=device,powerId=definedAnswer,
+                        state=definedAnswer, modelName=definedAnswer)      
+      items = generateReportPdf("powerSupply",dataArray,items)
+
+
+  # Generate the file for the pdf report 
+  if testResult > 0:
+    testStatus = "NOT PASS"
+  else:
+    testStatus = "PASS"
+  resultPdf ={"items":items,"testResult":testStatus}
+  # Store the result in the file
+  writeData('result/powerSupply',resultPdf)
+  
+
+
+
 
 
 # Process evpn imet
@@ -688,22 +735,10 @@ def generateReportPdf(reportName,dataArray,items):
   indexString = str(index)
   dataArray['id'] = indexString
   an_item = dataArray
-  # if reportName == "MLAG":
-  #   dataArray['id'] = indexString
-  #   an_item = dataArray
-  # elif reportName == "MLAGPeerLink":
-  #   dataArray['id'] = indexString
-  #   an_item = dataArray
-  # elif reportName == "BGP":
-  #   dataArray['id'] = indexString
-  #   an_item = dataArray
-  # elif reportName == "EVPNV2":
-  #   dataArray['id'] = indexString
-  #   an_item = dataArray
   items.append(an_item)
   return items
 
 
 
 # main()
-# multiAgentProtocol()
+powerSupplyPdf()

@@ -1,2 +1,2 @@
-AUTHOR = "Angelique Phillips"
+AUTHOR = "Customer Name"
 SITE = "Magny les hameaux"

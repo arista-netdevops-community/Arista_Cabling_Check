@@ -29,6 +29,23 @@ def refreshData():
 def index():
   return render_template('index.html')
 
+# MAP HARDWARE FROM THE CABLING ***********************************************************
+@app.route('/powerSupplyPdf')
+def powerSupplyPdf():
+  dwarfFunction.powerSupplyPdf()
+  with open('visuapp/static/data/result/powerSupply.json') as jsondata:
+    data = json.load(jsondata)
+  title = {'title': 'Power Supply'}
+  rendered = render_template('powerSupplyPdf.html',data=data, title=title)
+  pdf= pdfkit.from_string(rendered,False)
+  response = make_response(pdf)
+  response.headers['Content-type'] = 'application/pdf'
+  response.headers['Content-Disposition'] = 'inline; filename=powerSupplyPdf.pdf; options=options'
+  return response
+
+# **************************************************************************************************
+
+
 # MAP CABLING ********************************************************
 @app.route('/mapCabling')
 def mapCabling():
