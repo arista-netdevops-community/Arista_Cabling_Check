@@ -22,11 +22,12 @@ options = {
 
 @app.route('/refreshData')
 def refreshData():
-  dwarfFunction.main()
+  # dwarfFunction.main()
   return render_template('index.html')
 
 @app.route('/')
 def index():
+  # dwarfFunction.main()
   return render_template('index.html')
 
 # MAP HARDWARE FROM THE CABLING ***********************************************************
@@ -166,14 +167,14 @@ def mapEVPN():
 
 @app.route('/mapEVPNPy',methods=['POST'])
 def mapEVPNPy():
-  dwarfFunction.mapEVPNV2()
-  with open('visuapp/static/data/result/EVPNV2Status.json') as jsondata:
+  dwarfFunction.mapEVPNV3()
+  with open('visuapp/static/data/result/EVPNV3Status.json') as jsondata:
     data = json.load(jsondata)
   return data
 
 @app.route('/mapEVPNPdf')
 def mapEVPNPdf():
-  with open('visuapp/static/data/result/EVPNV2Report.json') as jsondata:
+  with open('visuapp/static/data/result/EVPNV3Report.json') as jsondata:
     data = json.load(jsondata)
   title = {'title': 'EVPN Status'}
   rendered = render_template('mapEVPNPdf.html',data=data, title=title)

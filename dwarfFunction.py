@@ -365,7 +365,7 @@ def mapBGPV2():
                                   peerState="NA",status="NA")
                   items = generateReportPdf("BGP",dataArray,items)
               except KeyError:
-                # print ('Pas dans un port channel - interface doesn t exist')
+                print ('Pas dans un port channel - interface doesn t exist')
                 # Call the pdf report function
                 dataArray = dict(localDevice=deviceKey,localPort=interfaceKey,
                                   localIp="None", remoteIp="NA",
@@ -386,14 +386,13 @@ def mapBGPV2():
   writeData('result/BGPReport',resultPdf)
 
 # Process for the EVPN
-def mapEVPNV2():
-  spines=[]
-  loopback0LeafJson={}
-  dataEvpnMap={'level1':{}}
-  deviceWithoutL0=[]
-  spinePortCounter={}
-  testResult =0
+def mapEVPNV3():
+  spines = []
   items=[]
+  spineLoopback = {}
+  dataEvpnMap={'level1':{}}
+  testResult = 0
+
   # Read the source of truth
   data = readDataJsonFile('referenceCablingMap')
   # Inventory device
@@ -403,66 +402,62 @@ def mapEVPNV2():
     devices.remove(device)
     # add the spine 
     spines.append(device)
-  # Read the loopback 0 on the leaf
+  
+  # SPINE process
+  # Store the routerId and the device name ,
+  for spine in spines:
+    dataEvpnMap['level1'][spine]={}
+    # Load the json file associated to the the device
+    spineData = readDataJsonFile('devices/'+spine)
+    if spineData == None:
+      spineData={}
+    if 'showbgpevpnsummary' in spineData.keys():
+      spineRouterId = spineData['showbgpevpnsummary']['vrfs']['default']['routerId']
+      spineLoopback[spineRouterId]=spine
+    else:
+      print ("no show bgp evpn summary result")
+  
+  # DEVICE Process
+  spinePort = 1
+  globalDevices = devices.copy()
   for device in devices:
     # Load the json file associated to the the device
     deviceData = readDataJsonFile('devices/'+device)
     if deviceData == None:
       deviceData={}
-    # Test if loopback0 exist -
-    try:
-      if 'Loopback0' in deviceData['showipinterface']['interfaces'].keys():
-        # store the lopoback as a key and the device name as a value
-        loopback0LeafJson[deviceData['showipinterface']['interfaces']['Loopback0']['interfaceAddress']['primaryIp']['address']] = device
-        # loopback1Leaf.append(deviceData['showipinterface']['interfaces']['Loopback1']['interfaceAddress']['primaryIp']['address'])
-    except KeyError:
-      print ("loopback0 doesn't exist")
-      deviceWithoutL0.append(device)
-  # Check the EVPN connectivity from the spine
-  for spine in spines:
-    spinePort = 1
-    dataEvpnMap['level1'][spine]={}
-    # Load the json file associated to the the device
-    deviceData = readDataJsonFile('devices/'+spine)
-    if deviceData == None:
-      deviceData={}
-    # Test if the showbgpevpnsummary record exist in deviceData
-    if 'showbgpevpnsummary' in deviceData:
-      for key in deviceData['showbgpevpnsummary']['vrfs']['default']['peers'].keys():
-        if key in loopback0LeafJson.keys():
-          device = loopback0LeafJson[key]
-          devicePort = spines.index(spine)
-          # Check the session state
-          if deviceData['showbgpevpnsummary']['vrfs']['default']['peers'][key]['peerState'] == 'Established':
-            state = 'ok'
-            peerState = 'Established'
-          else:
-            state = 'ko'
-            peerState = 'ERROR'
-            testResult+=1
-          dataEvpnMap['level1'][spine].update({str(spinePort):[device,str(devicePort+1),state]})
-          # Gen pdf report *****************************
-          dataArray = dict(localDevice=spine, remoteDevice=device,peerState=peerState,evpnPeer=key,status=state)
-          items = generateReportPdf("EVPNV2",dataArray,items)
-          # ********************************************
-        else:
-          devicePort = spines.index(spine)
-          dataEvpnMap['level1'][spine].update({str(spinePort):[device,str(devicePort+1),"Error"]})
-          # Gen pdf report *****************************
-          dataArray = dict(localDevice=spine, remoteDevice="unknow",peerState="unknow",evpnPeer=key,status="ERROR")
-          items = generateReportPdf("EVPNV2",dataArray,items)
-          testResult+=1
-          # ********************************************
-        spinePort +=1
-        spinePortCounter.update({spine:spinePort})
-  # Add device without loopback0
-  for spine in spines:
-    spinePort = spinePortCounter[spine]
-    for device in deviceWithoutL0:
-      devicePort = spines.index(spine)
-      dataEvpnMap['level1'][spine].update({str(spinePort):[device,str(devicePort+1),"NA"]})
-      spinePort +=1
+    if 'showbgpevpnsummary' in deviceData.keys():
+      if len(deviceData['showbgpevpnsummary']['vrfs'].keys()) > 0:
+        for peer in deviceData['showbgpevpnsummary']['vrfs']['default']['peers'].keys():
+          if peer in spineLoopback.keys():
+            try:
+              globalDevices.remove(device)
+            except :
+              pass
+            spine = spineLoopback[peer]
+            devicePort = spines.index(spine)
+            peerState = deviceData['showbgpevpnsummary']['vrfs']['default']['peers'][peer]['peerState']
+            if peerState == 'Established':
+              state = "ok"
+            else :
+              state = "ko"
+              testResult += 1
+            dataEvpnMap['level1'][spine].update({str(spinePort):[device,str(devicePort+1),state]})
+            # Gen pdf report *****************************
+            dataArray = dict(localDevice=device, remoteDevice=spine,peerState=peerState,evpnPeer=peer,status=state)
+            items = generateReportPdf("EVPNV3",dataArray,items)
+        spinePort += 1
+  # Device who has no evpn configuration
 
+  for device in globalDevices:
+    for spine in spines:
+      devicePort = spines.index(spine)
+      state = "NA"
+      dataEvpnMap['level1'][spine].update({str(spinePort):[device,str(devicePort+1),state]})
+      # Gen pdf report *****************************
+      dataArray = dict(localDevice=device, remoteDevice=spine,peerState="NA",evpnPeer="NA",status=state)
+      items = generateReportPdf("EVPNV3",dataArray,items)
+    spinePort += 1
+  
   # Generate the file for the pdf report 
   if testResult > 0:
     testStatus = "NOT PASS"
@@ -471,8 +466,8 @@ def mapEVPNV2():
   resultPdf ={"items":items,"testResult":testStatus}
   
   # Store the result in the file
-  writeData('result/EVPNV2Status',dataEvpnMap)
-  writeData('result/EVPNV2Report',resultPdf)
+  writeData('result/EVPNV3Status',dataEvpnMap)
+  writeData('result/EVPNV3Report',resultPdf)
 
 # Process for the mlag
 def mlagStatus():
@@ -757,12 +752,9 @@ def coolingPdf():
   writeData('result/fanTest',resultPdf)
 
 
-
 # Process evpn imet
 def EVPNimet():
   print("to be developp")
-  
-
 
 # remove the spine from the inventory
 def removeSpineFromInventory(devices,data):
@@ -785,4 +777,4 @@ def generateReportPdf(reportName,dataArray,items):
 
 
 
-# main()
+# mapEVPN3()

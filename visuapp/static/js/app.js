@@ -249,11 +249,12 @@ function mapDefinition(nodeMap,linkMap){
  // initialize your network!
  network = new vis.Network(container, data, options);
 
- network.on("selectNode", function(params){
-  document.getElementById("nodeIdentification").value = nodes.get(params.nodes[0])['label'];
- });
- network.on("selectEdge", function(params){
-  // document.getElementById("nodeIdentification").value = nodes.get(params.nodes[0])['label'];
-  console.log(params)
- });
+  network.on("click", function(params){
+    if (params.nodes.length == 1){
+      document.getElementById("nodeIdentification").value = nodes.get(params.nodes[0])['label']
+    }
+    if (params.edges.length == 1 && params.nodes.length == 0){
+      document.getElementById("nodeIdentification").value = "Ethernet: " + edges.get(params.edges[0])['title']
+    }
+  });
 }
