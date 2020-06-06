@@ -22,12 +22,12 @@ options = {
 
 @app.route('/refreshData')
 def refreshData():
-  # dwarfFunction.main()
+  dwarfFunction.main()
   return render_template('index.html')
 
 @app.route('/')
 def index():
-  # dwarfFunction.main()
+  dwarfFunction.main()
   return render_template('index.html')
 
 # MAP HARDWARE FROM THE CABLING ***********************************************************

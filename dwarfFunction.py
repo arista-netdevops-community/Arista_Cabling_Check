@@ -59,7 +59,7 @@ def readDataJsonFile(file):
   try:
     with open('visuapp/static/data/' + file + '.json') as jsondata:
       data = json.load(jsondata)
-      return data
+    return data
   except:
     pass
 
@@ -143,9 +143,11 @@ def mapLldpDelta():
             # Test if there is some information linked to the interface - remote devie.
             if len(deviceData['showlldpneighborsdetail']['lldpNeighbors'][interface]['lldpNeighborInfo']) > 0:
               lldpRemoteDevice = deviceData['showlldpneighborsdetail']['lldpNeighbors'][interface]['lldpNeighborInfo'][0]['systemName']
+              if len(lldpRemoteDevice.split('.')) > 1:
+                lldpRemoteDevice = lldpRemoteDevice.split('.')[0]
               lldpRemotePort = (deviceData['showlldpneighborsdetail']['lldpNeighbors'][interface]['lldpNeighborInfo'][0]['neighborInterfaceInfo']['interfaceId']).replace('"','')
               # Test if the remote device is equal to what we have from the cabling
-              if interfaceValue[0] == deviceData['showlldpneighborsdetail']['lldpNeighbors'][interface]['lldpNeighborInfo'][0]['systemName']:
+              if interfaceValue[0].lower() == lldpRemoteDevice.lower():
                 # Test if the remote port is equal to what we have from the cabling
                 if "Ethernet" + interfaceValue[1] == (deviceData['showlldpneighborsdetail']['lldpNeighbors'][interface]['lldpNeighborInfo'][0]['neighborInterfaceInfo']['interfaceId']).replace('"',''):
                   data[levelKey][deviceKey][interfaceKey].append("ok")
