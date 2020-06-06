@@ -1,2 +1,2 @@
-AUTHOR = "Customer Name"
-SITE = "Magny les hameaux"
+AUTHOR = "EOS User"
+SITE = "DC1 Fabric"
