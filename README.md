@@ -29,7 +29,7 @@ Software to check EOS topology and validate physical deployment in large environ
 $ pip install -r requirements.txt
 ```
 
-### Step2 : Install [`wkhtmltopdf`](https://wkhtmltopdf.org/) to generate PDF files
+### Step2 : Install wkhtmltopdf to generate PDF files
 
 On Macos, use brew:
 
