@@ -6,11 +6,12 @@ import os, sys, re
 import time
 import json
 from netaddr import *
+import config
 
 
 # username and password for the connection
-username = 'dwarf'
-password = 'arista'
+username = config.USERNAME
+password = config.PASSWORD
 
 deviceNotConnected=[]
 
@@ -786,3 +787,5 @@ def generateReportPdf(reportName,dataArray,items):
 
 
 # mapEVPN3()
+# main()
+# print (config.USERNAME)
