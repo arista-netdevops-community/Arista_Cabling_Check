@@ -31,6 +31,8 @@ commandes=['show lldp neighbors detail',
             'show system environment cooling',
             'show system environment power']
 
+commandesAfterError =[]
+
 def deviceInventory():
   deviceArray=[]
   # Read the source of truth
@@ -65,6 +67,7 @@ def readDataJsonFile(file):
 
 # Connection to the switch
 def openconnexion(device,username,password,cde):
+  global commandesAfterError
   switch = Server("http://%s:%s@%s/command-api" %(username,password,device))
   try:
     # result = switch.runCmds(version = 1, cmds = cde)
@@ -81,8 +84,8 @@ def openconnexion(device,username,password,cde):
     error = err.args[0][1]
     if code == 1000:
       erreurCde = error.split("'")[1]
-      commandes.remove(erreurCde)
-      openconnexion(device,username,password,commandes)
+      commandesAfterError.remove(erreurCde)
+      openconnexion(device,username,password,commandesAfterError)
   except:
     deviceNotConnected.append(device)
     data = {}
@@ -96,9 +99,11 @@ def openconnexionTest(device,username,password,cde):
 
 
 def main():
+  global commandesAfterError
   start_time_Final = datetime.now()
   devices = deviceInventory()
   for device in devices:
+    commandesAfterError = commandes.copy()
     print ("******************" + device + "*******************************")
     openconnexion(device,username,password,commandes)
     # openconnexionTest(device,username,password,commandes)
@@ -414,7 +419,8 @@ def mapEVPNV3():
     if spineData == None:
       spineData={}
     if 'showbgpevpnsummary' in spineData.keys():
-      spineRouterId = spineData['showbgpevpnsummary']['vrfs']['default']['routerId']
+      # spineRouterId = spineData['showbgpevpnsummary']['vrfs']['default']['routerId']
+      spineRouterId = spineData['showbgpevpnsummary']['routerId']
       spineLoopback[spineRouterId]=spine
     else:
       print ("no show bgp evpn summary result")
