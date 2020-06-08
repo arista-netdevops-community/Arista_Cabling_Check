@@ -128,11 +128,11 @@ Reference cable example file:
 
 ### Configure Username and password
 
-Edit file [dwarfFunction.py](./dwarfFunction.py) and change value for username and password:
+Edit [`config.py`](./config.py) accordingly:
 
 ```python
-username = 'dwarf'
-password = 'arista'
+USERNAME='ansible'
+PASSWORD='ansible'
 ```
 
 ### Change DC hostname (optional)
