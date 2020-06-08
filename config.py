@@ -6,6 +6,7 @@ SITE = "DC1 Fabric"
 
 ### EOS Config
 # Username to connect to EOS devices
-USERNAME='ansible'
+USERNAME='dwarf'
 # Password to use to connect to EOS devices.
-PASSWORD='ansible'
+PASSWORD='arista'
+
