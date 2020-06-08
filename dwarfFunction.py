@@ -79,7 +79,7 @@ def openconnexion(device,username,password,cde):
       for index in range(0,len(result)):
         data.update({cde[index].replace(" ",""):result[index]})
       writeData('devices/' + device,data)
-  
+
   except AppError as err:
     code = err.args[0][0]
     error = err.args[0][1]
@@ -138,7 +138,7 @@ def mapLldpDelta():
     for deviceKey,deviceValue in levelValue.items():
       # Load the file associated to the device
       deviceData = readDataJsonFile('devices/'+ deviceKey)
-      # Store the interface from the cabling 
+      # Store the interface from the cabling
       for interfaceKey,interfaceValue in deviceValue.items():
         # Search the interfaceKey in the deviceData (configuration) file
         interface = "Ethernet"+str(interfaceKey)
@@ -187,7 +187,7 @@ def mapLldpDelta():
             status ="ERROR"
             testResult+=1
 
-        # Generate the file for the pdf report 
+        # Generate the file for the pdf report
         indexString = str(index)
         an_item = dict(id=indexString, localDevice=deviceKey,localPort=interfaceKey, remoteDevice=interfaceValue[0], remotePort=interfaceValue[1],
         lldpRemoteDevice = lldpRemoteDevice, lldpRemotePort=lldpRemotePort,status=status)
@@ -213,7 +213,7 @@ def mapInterfacesStatus():
     for deviceKey,deviceValue in levelValue.items():
       # Load the file associated to the device
       deviceData = readDataJsonFile('devices/'+ deviceKey)
-      # Store the interface from the cabling 
+      # Store the interface from the cabling
       for interfaceKey,interfaceValue in deviceValue.items():
         # Search the interfaceKey in the deviceData (configuration) file
         interface = "Ethernet"+str(interfaceKey)
@@ -238,8 +238,8 @@ def mapInterfacesStatus():
           data[levelKey][deviceKey][interfaceKey].append("ko")
           status ="ERROR"
           testResult+=1
-  
-        # Generate the file for the pdf report 
+
+        # Generate the file for the pdf report
         indexString = str(index)
         an_item = dict(id=indexString, localDevice=deviceKey,localPort=interfaceKey,status=status)
         items.append(an_item)
@@ -259,10 +259,10 @@ def mapBGPV2():
   items = []
   testResult = 0
   # Variable for the BGP procedure
-  
+
   # Read the source of truth
   data = readDataJsonFile('referenceCablingMap')
-  
+
   for levelKey,levelValue in data.items():
     for deviceKey,deviceValue in levelValue.items():
       # load the file associated to the device
@@ -270,7 +270,7 @@ def mapBGPV2():
       # Test deviceData is empty (None)
       if deviceData == None:
         deviceData={}
-      # Store the interface from the cabling 
+      # Store the interface from the cabling
       for interfaceKey,interfaceValue in deviceValue.items():
         # Search the interfaceKey in the deviceData (configuration) file
         interface = "Ethernet"+str(interfaceKey)
@@ -383,7 +383,7 @@ def mapBGPV2():
               print ("pas de configuration level 3 pour cette interface")
         else:
           print ("la section showip bgp summary n existe pas")
-        # Generate the file for the pdf report 
+        # Generate the file for the pdf report
         if testResult > 0:
           testStatus = "NOT PASS"
         else:
@@ -408,9 +408,9 @@ def mapEVPNV3():
   for device in data['level1'].keys():
     # remove the spine from the inventory
     devices.remove(device)
-    # add the spine 
+    # add the spine
     spines.append(device)
-  
+
   # SPINE process
   # Store the routerId and the device name ,
   for spine in spines:
@@ -425,7 +425,7 @@ def mapEVPNV3():
       spineLoopback[spineRouterId]=spine
     else:
       print ("no show bgp evpn summary result")
-  
+
   # DEVICE Process
   spinePort = 1
   globalDevices = devices.copy()
@@ -466,14 +466,14 @@ def mapEVPNV3():
       dataArray = dict(localDevice=device, remoteDevice=spine,peerState="NA",evpnPeer="NA",status=state)
       items = generateReportPdf("EVPNV3",dataArray,items)
     spinePort += 1
-  
-  # Generate the file for the pdf report 
+
+  # Generate the file for the pdf report
   if testResult > 0:
     testStatus = "NOT PASS"
   else:
     testStatus = "PASS"
   resultPdf ={"items":items,"testResult":testStatus}
-  
+
   # Store the result in the file
   writeData('result/EVPNV3Status',dataEvpnMap)
   writeData('result/EVPNV3Report',resultPdf)
@@ -496,7 +496,7 @@ def mlagStatus():
   devices = deviceInventory()
   # Remove the spine
   devices = removeSpineFromInventory(devices,data)
-  
+
   # Start the process
   # Load the json file associated to the the device
   for device in devices:
@@ -581,7 +581,7 @@ def mlagStatus():
                         peerLink='NA',configSanity='NA',
                         status='NA')
       items = generateReportPdf("MLAG",dataArray,items)
-    # Generate the file for the pdf report 
+    # Generate the file for the pdf report
     if testResult > 0:
       testStatus = "NOT PASS"
     else:
@@ -595,11 +595,11 @@ def mlagStatus():
 # Process MLAG for the port-channel
 # the port-channel must combine 2 ports at least.
 def mlagPortChannel(device,data,mlagPeerLink):
-  items = [] 
+  items = []
   dataInitial = readDataJsonFile('result/mlagPortChannel')
   if dataInitial != None:
     items = dataInitial['items']
-  # Variable for the pdf 
+  # Variable for the pdf
   testResult = 0
   # Verify the number of ports in the portchannel must be >2
   mlagPeerLinkPort = data['interfaces'].keys()
@@ -655,18 +655,18 @@ def multiAgentPdf():
       else :
         state = "ok"
         action = "none"
-      
+
       # Gen pdf report *****************************
       dataArray = dict(localDevice=device, configure=configure,operating=operating,action=action,status=state)
       items = generateReportPdf("multiAgent",dataArray,items)
       # ********************************************
-  # Generate the file for the pdf report 
+  # Generate the file for the pdf report
   if testResult > 0:
     testStatus = "NOT PASS"
   else:
     testStatus = "PASS"
   resultPdf ={"items":items,"testResult":testStatus}
-  
+
   # Store the result in the file
   writeData('result/multiAgentReport',resultPdf)
 
@@ -700,11 +700,11 @@ def powerSupplyPdf():
       definedAnswer = "NA"
       # Call the pdf report function
       dataArray = dict(localDevice=device,powerId=definedAnswer,
-                        state=definedAnswer, modelName=definedAnswer)      
+                        state=definedAnswer, modelName=definedAnswer)
       items = generateReportPdf("powerSupply",dataArray,items)
 
 
-  # Generate the file for the pdf report 
+  # Generate the file for the pdf report
   if testResult > 0:
     testStatus = "NOT PASS"
   else:
@@ -751,7 +751,7 @@ def coolingPdf():
                         status=definedAnswer)
       items = generateReportPdf("fanTest",dataArray,items)
 
-  # Generate the file for the pdf report 
+  # Generate the file for the pdf report
   if testResult > 0:
     testStatus = "NOT PASS"
   else:
