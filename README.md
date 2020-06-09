@@ -21,6 +21,41 @@ Software to check EOS topology and validate physical deployment in large environ
 - DNS resolution for EOS devices.
 - eAPI running on port `80`
 
+## Docker (Recommended)
+
+To make it easy to use, a docker image is available in the repository to build your own system.
+
+1. Build your image
+
+```shell
+# Build image
+$ make build
+
+# Docker command
+$ docker build -t arista_check .
+````
+
+> Ensure to update your configuration first as described below.
+
+2. Run your image in the forground
+
+```shell
+# Run container
+$ make run
+
+# Docker command
+$ docker run --rm -p 8181:80/tcp  arista_check
+```
+
+System will be available on port 8181 of your host
+
+__Options__
+
+- DOCKER_NAME: Image name to use for build and run (default is `arista_check`)
+- DOCKER_TAG: Docker tag (default is `latest`)
+- PORT: Port to expose your arista_check server. (default is `8181`)
+- CONTAINER_NAME: Name of your running container. (default is `arista_check`)
+
 ## Installation
 
 ### Step 1 : Install Python requirements
