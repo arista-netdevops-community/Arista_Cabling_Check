@@ -1,6 +1,24 @@
+![Arista Check](https://img.shields.io/badge/Arista-EOS%20Automation-blue)
+
 # arista_Check
 
 Software to check EOS topology and validate physical deployment in large environment.
+
+- [arista_Check](#arista_check)
+  - [Supported features](#supported-features)
+  - [Requirements](#requirements)
+  - [Docker (Recommended)](#docker-recommended)
+    - [Build local docker image](#build-local-docker-image)
+    - [Makefile options](#makefile-options)
+  - [Server Configuration](#server-configuration)
+    - [Generate topology file](#generate-topology-file)
+    - [Configure Username and password](#configure-username-and-password)
+    - [Change DC hostname (optional)](#change-dc-hostname-optional)
+  - [Installation](#installation)
+    - [Step 1 : Install Python requirements](#step-1--install-python-requirements)
+    - [Step2 : Install wkhtmltopdf to generate PDF files](#step2--install-wkhtmltopdf-to-generate-pdf-files)
+    - [Run service](#run-service)
+  - [License](#license)
 
 ![overview](./medias/arista-check-overview.png)
 
@@ -16,62 +34,52 @@ Software to check EOS topology and validate physical deployment in large environ
 ## Requirements
 
 - Python 3
-- Flask
-- wkhtmltopdf
+- [`Flask`](https://flask.palletsprojects.com/en/1.1.x/)
+- [`wkhtmltopdf`](https://wkhtmltopdf.org/)
 - DNS resolution for EOS devices.
 - eAPI running on port `80`
 
-## Installation
+## Docker (Recommended)
 
-### Step 1 : Install Python requirements
+This section explains how to build your own docker image and run __arista_check__ on any docker host.
 
-```shell
-$ pip install -r requirements.txt
-```
+### Build local docker image
 
-### Step2 : Install wkhtmltopdf to generate PDF files
-
-On Macos, use brew:
+To make it easy to use, a docker image is available in the repository to build your own system.
 
 ```shell
-$ brew install Caskroom/cask/wkhtmltopdf
-```
+# Build image
+$ make build
 
-On headless centos, use following setup:
+# Docker command
+$ docker build -t arista_check .
+````
+
+> Ensure to update your configuration first as described below.
+
+### Run container
+
+Run your image in the forground
 
 ```shell
-# Install base tool
-$ yum install -y wkhtmltopdf
+# Run container
+$ make run
 
-# Required for headless use
-$ yum install xorg-x11-server-Xvfb
-$ yum install xorg-x11-fonts-Type1 xorg-x11-fonts-75dpi
-
-# Create Service file
-$ vim xvfb.service
-[Unit]
-Description=Virtual Frame Buffer X Server
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/Xvfb :42 -screen 0 1024x768x24 -ac +extension GLX +render -noreset
-
-[Install]
-WantedBy=multi-user.target
-
-# Deploy service
-$ cp xvfb.service /etc/systemd/system/xvfb.service
-$ sudo systemctl enable xvfb.service && sudo systemctl start xvfb.service && sudo systemctl status xvfb.service
-$ sudo systemctl daemon-reload
-
-# Create binary
-$ printf '#!/bin/bash\nxvfb-run -a --server-args="-screen 0, 1024x768x24" /usr/bin/wkhtmltopdf -q $*' > /usr/bin/wkhtmltopdf.sh
-$ chmod a+x /usr/bin/wkhtmltopdf.sh
-$ ln -s /usr/bin/wkhtmltopdf.sh /usr/local/bin/wkhtmltopdf
-
-# Run a test
-$ wkhtmltopdf http://www.google.com output.pdf
+# Docker command
+$ docker run --rm -p 8181:80/tcp  arista_check
 ```
+
+System will be available on port `8181` of your host
+
+### Makefile options
+
+These options can be applied to either build or run targets.
+
+- `DATA`: relative path to folder where __referenceCablingMaps.json__ is saved (default is `visuapp/static/data`)
+- `PORT`: Port to expose your arista_check server. (default is `8181`)
+- `DOCKER_NAME`: Image name to use for build and run (default is `arista_check`)
+- `DOCKER_TAG`: Docker tag (default is `latest`)
+- `CONTAINER_NAME`: Name of your running container. (default is `arista_check`)
 
 ## Server Configuration
 
@@ -142,6 +150,62 @@ Edit [`config.py`](./config.py) accordingly:
 ```python
 AUTHOR = "EOS User"
 SITE = "DC1 Fabric"
+```
+
+## Installation
+
+This section explains how to install __arista_check__ on a system.
+
+### Step 1 : Install Python requirements
+
+```shell
+$ pip install -r requirements.txt
+...
+```
+
+### Step2 : Install wkhtmltopdf to generate PDF files
+
+On Macos, use brew:
+
+```shell
+$ brew install Caskroom/cask/wkhtmltopdf
+...
+```
+
+On headless centos, use following setup:
+
+```shell
+# Install base tool
+$ yum install -y wkhtmltopdf
+
+# Required for headless use
+$ yum install xorg-x11-server-Xvfb
+$ yum install xorg-x11-fonts-Type1 xorg-x11-fonts-75dpi
+
+# Create Service file
+$ vim xvfb.service
+[Unit]
+Description=Virtual Frame Buffer X Server
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/Xvfb :42 -screen 0 1024x768x24 -ac +extension GLX +render -noreset
+
+[Install]
+WantedBy=multi-user.target
+
+# Deploy service
+$ cp xvfb.service /etc/systemd/system/xvfb.service
+$ sudo systemctl enable xvfb.service && sudo systemctl start xvfb.service && sudo systemctl status xvfb.service
+$ sudo systemctl daemon-reload
+
+# Create binary
+$ printf '#!/bin/bash\nxvfb-run -a --server-args="-screen 0, 1024x768x24" /usr/bin/wkhtmltopdf -q $*' > /usr/bin/wkhtmltopdf.sh
+$ chmod a+x /usr/bin/wkhtmltopdf.sh
+$ ln -s /usr/bin/wkhtmltopdf.sh /usr/local/bin/wkhtmltopdf
+
+# Run a test
+$ wkhtmltopdf http://www.google.com output.pdf
 ```
 
 ### Run service
