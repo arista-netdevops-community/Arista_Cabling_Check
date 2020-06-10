@@ -2,6 +2,8 @@ DOCKER_NAME ?= arista_check
 DOCKER_TAG ?= latest
 PORT ?= 8181
 CONTAINER_NAME ?= arista_check
+DATA ?= visuapp/static/data
+HOME_DIR = $(shell pwd)
 
 .PHONY: help
 help: ## Display help message
@@ -9,20 +11,20 @@ help: ## Display help message
 
 .PHONY: build
 build: ## Build docker image
-        docker build -t$(DOCKER_NAME):$(DOCKER_TAG) .
+	docker build -t$(DOCKER_NAME):$(DOCKER_TAG) .
 
 .PHONY: run
 run: ## run docker image in foreground
-        docker run --rm -p $(PORT):80/tcp $(DOCKER_NAME):$(DOCKER_TAG)
+	docker run --rm -p $(PORT):80/tcp $(DOCKER_NAME):$(DOCKER_TAG)
 
 .PHONY: daemon
 daemon: ## run docker image in background
-        docker run -d --rm -p $(PORT):80/tcp --name $(DOCKER_NAME):$(DOCKER_TAG) $(CONTAINER_NAME)
+	docker run -d --rm -p $(PORT):80/tcp -v $(HOME_DIR)/$(DATA):/projects/visuapp/static/data --name $(CONTAINER_NAME) $(DOCKER_NAME):$(DOCKER_TAG)
 
 .PHONY: stop
 stop: ## stop docker image
-        docker stop $(CONTAINER_NAME)
+	docker stop $(CONTAINER_NAME)
 
 .PHONY: connect
 connect: ## connect to docker image for debug purpose
-        docker exec -it $(CONTAINER_NAME) bash
+	docker exec -it $(CONTAINER_NAME) bash
