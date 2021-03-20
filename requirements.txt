@@ -8,7 +8,7 @@ defusedxml==0.6.0
 Flask==1.1.1
 html5lib==1.0.1
 itsdangerous==1.1.0
-Jinja2==2.11.1
+Jinja2==2.11.3
 jsonrpclib-pelix==0.4.0
 MarkupSafe==1.1.1
 netaddr==0.7.19
