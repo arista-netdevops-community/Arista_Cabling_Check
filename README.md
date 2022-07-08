@@ -1,3 +1,5 @@
+[![License](https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg)](https://github.com/arista-netdevops-community/Arista_Cabling_Check/blob/master/LICENSE)
+
 # arista_Check
 
 Software to check EOS topology and validate physical deployment in large environment.
